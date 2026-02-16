@@ -1,3 +1,4 @@
+from django.shortcuts import render, redirect
 from rest_framework import viewsets, generics, permissions, status
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
@@ -43,3 +44,12 @@ class ProposalViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(applicant=self.request.user)
+
+# Website Views
+def home(request):
+    jobs = Job.objects.all().order_by('-created_at')
+    return render(request, 'core/home.html', {'jobs': jobs})
+
+def job_detail(request, pk):
+    job = Job.objects.get(pk=pk)
+    return render(request, 'core/job_detail.html', {'job': job})

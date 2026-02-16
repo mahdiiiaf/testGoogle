@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upwork Clone</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; }
+        .job-card { border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; border-radius: 8px; }
+        .job-card h2 { margin-top: 0; }
+        .budget { color: #2c3e50; font-weight: bold; }
+        header { border-bottom: 2px solid #eee; padding-bottom: 20px; margin-bottom: 30px; }
+        .btn { background: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Upwork Clone</h1>
+        <p>Connecting Experts, Companies, and Freelancers</p>
+    </header>
+
+    <main>
+        <h2>Recent Job Postings</h2>
+        {% for job in jobs %}
+            <div class="job-card">
+                <h2>{{ job.title }}</h2>
+                <p>Posted by: <strong>{{ job.company.company_profile.company_name|default:job.company.username }}</strong></p>
+                <p>{{ job.description|truncatewords:30 }}</p>
+                <p class="budget">Budget: ${{ job.budget }}</p>
+                <a href="{% url 'web-job-detail' job.pk %}" class="btn">View Details</a>
+            </div>
+        {% empty %}
+            <p>No jobs posted yet.</p>
+        {% endfor %}
+    </main>
+</body>
+</html>

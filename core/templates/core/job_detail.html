@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ job.title }} | Upwork Clone</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; }
+        .container { max-width: 800px; margin: auto; }
+        .budget { color: #2c3e50; font-weight: bold; font-size: 1.2em; }
+        .back-link { display: block; margin-bottom: 20px; color: #007bff; text-decoration: none; }
+        .proposal-form { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{% url 'web-home' %}" class="back-link">&larr; Back to jobs</a>
+        <h1>{{ job.title }}</h1>
+        <p>Posted by: <strong>{{ job.company.company_profile.company_name|default:job.company.username }}</strong></p>
+        <hr>
+        <p>{{ job.description }}</p>
+        <p class="budget">Budget: ${{ job.budget }}</p>
+
+        <div class="proposal-form">
+            <h3>Interested in this job?</h3>
+            <p>Experts and Freelancers can submit proposals via the API.</p>
+            <code>POST /api/proposals/</code>
+        </div>
+    </div>
+</body>
+</html>
