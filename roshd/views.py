@@ -48,8 +48,8 @@ class ProposalViewSet(viewsets.ModelViewSet):
 # Website Views
 def home(request):
     jobs = Job.objects.all().order_by('-created_at')
-    return render(request, 'core/home.html', {'jobs': jobs})
+    return render(request, 'roshd/home.html', {'jobs': jobs})
 
 def job_detail(request, pk):
     job = Job.objects.get(pk=pk)
-    return render(request, 'core/job_detail.html', {'job': job})
+    return render(request, 'roshd/job_detail.html', {'job': job})

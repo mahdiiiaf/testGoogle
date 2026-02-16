@@ -15,13 +15,13 @@ def main():
     if not os.environ.get("DJANGO_SECRET_KEY"):
         os.environ["DJANGO_SECRET_KEY"] = "django-insecure-bootstrap-key-for-local-run"
 
-    print("--- Starting Upwork Clone Bootstrap ---")
+    print("--- Starting Roshd Bootstrap ---")
 
     # 1. Install dependencies (optional, but good to ensure)
     # run_command("pip install django djangorestframework django-cors-headers")
 
     # 2. Run migrations
-    run_command("python manage.py makemigrations core")
+    run_command("python manage.py makemigrations roshd")
     run_command("python manage.py migrate")
 
     # 3. Start the server

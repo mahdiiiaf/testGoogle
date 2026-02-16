@@ -1,5 +1,5 @@
 """
-WSGI config for upwork_clone project.
+WSGI config for roshd_project project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "upwork_clone.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "roshd_project.settings")
 
 application = get_wsgi_application()
