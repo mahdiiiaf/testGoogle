@@ -1,34 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="fa" dir="rtl">
 <head>
-    <title>Roshd</title>
+    <meta charset="UTF-8">
+    <title>رشد</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; }
-        .job-card { border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; border-radius: 8px; }
-        .job-card h2 { margin-top: 0; }
-        .budget { color: #2c3e50; font-weight: bold; }
+        body { font-family: Tahoma, Arial, sans-serif; margin: 40px; line-height: 1.6; background-color: #f4f7f6; }
+        .job-card { background: white; border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .job-card h2 { margin-top: 0; color: #2c3e50; }
+        .budget { color: #27ae60; font-weight: bold; }
         header { border-bottom: 2px solid #eee; padding-bottom: 20px; margin-bottom: 30px; }
-        .btn { background: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; }
+        .btn { background: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 10px; }
+        .btn:hover { background: #218838; }
     </style>
 </head>
 <body>
     <header>
-        <h1>Roshd</h1>
-        <p>Connecting Experts, Companies, and Freelancers</p>
+        <h1>رشد</h1>
+        <p>اتصال متخصصان، شرکت‌ها و فریلنسرها</p>
     </header>
 
     <main>
-        <h2>Recent Job Postings</h2>
+        <h2>آخرین آگهی‌های شغلی</h2>
         {% for job in jobs %}
             <div class="job-card">
                 <h2>{{ job.title }}</h2>
-                <p>Posted by: <strong>{{ job.company.company_profile.company_name|default:job.company.username }}</strong></p>
+                <p>ارسال شده توسط: <strong>{{ job.company.company_profile.company_name|default:job.company.username }}</strong></p>
                 <p>{{ job.description|truncatewords:30 }}</p>
-                <p class="budget">Budget: ${{ job.budget }}</p>
-                <a href="{% url 'web-job-detail' job.pk %}" class="btn">View Details</a>
+                <p class="budget">بودجه: {{ job.budget }} دلار</p>
+                <a href="{% url 'web-job-detail' job.pk %}" class="btn">مشاهده جزئیات</a>
             </div>
         {% empty %}
-            <p>No jobs posted yet.</p>
+            <p>هنوز هیچ آگهی شغلی ثبت نشده است.</p>
         {% endfor %}
     </main>
 </body>
