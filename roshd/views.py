@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
@@ -155,7 +156,6 @@ def profile_view(request, username):
         context['profile'] = getattr(profile_user, 'company_profile', None)
 
     return render(request, 'roshd/profile.html', context)
-from django.db.models import Q
 
 @login_required
 def chat_list(request):

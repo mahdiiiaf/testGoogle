@@ -1,35 +1,32 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ job.title }} | رشد</title>
-    <style>
-        body { font-family: Tahoma, Arial, sans-serif; margin: 40px; line-height: 1.6; background-color: #f4f7f6; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .budget { color: #27ae60; font-weight: bold; font-size: 1.2em; }
-        .back-link { display: block; margin-bottom: 20px; color: #007bff; text-decoration: none; }
-        .proposal-form { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 30px; border-right: 4px solid #28a745; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <a href="{% url 'web-home' %}" class="back-link">&rarr; بازگشت به آگهی‌ها</a>
-        <h1>{{ job.title }}</h1>
-        <p>ارسال شده توسط: <strong>{{ job.company.company_profile.company_name|default:job.company.username }}</strong></p>
-        <hr>
-        <p>{{ job.description }}</p>
-        <p class="budget">بودجه: {{ job.budget }} دلار</p>
+{% extends "roshd/base.html" %}
 
-        <div class="proposal-form">
-            <h3>به این شغل علاقه‌مند هستید؟</h3>
-            {% if user.role == 'COMPANY' %}
-                <p>شما به عنوان شرکت وارد شده‌اید. شرکت‌ها نمی‌توانند پیشنهاد ارسال کنند.</p>
-            {% elif user.is_authenticated %}
-                <a href="{% url 'web-submit-proposal' job.pk %}" class="btn">ارسال پیشنهاد برای این پروژه</a>
-            {% else %}
-                <p>برای ارسال پیشنهاد باید <a href="{% url 'login' %}">وارد شوید</a> یا <a href="{% url 'web-register' %}">ثبت‌نام کنید</a>.</p>
-            {% endif %}
-        </div>
+{% block title %}{{ job.title }} | رشد{% endblock %}
+
+{% block extra_css %}
+<style>
+    .budget-val { color: #27ae60; font-weight: bold; font-size: 1.2em; }
+    .proposal-form-card { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 30px; border-right: 4px solid #28a745; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <a href="{% url 'web-home' %}" style="display: block; margin-bottom: 20px;">&rarr; بازگشت به آگهی‌ها</a>
+    <h1>{{ job.title }}</h1>
+    <p>ارسال شده توسط: <strong><a href="{% url 'web-profile' job.company.username %}">{{ job.company.company_profile.company_name|default:job.company.username }}</a></strong></p>
+    <hr>
+    <p style="white-space: pre-line;">{{ job.description }}</p>
+    <p class="budget-val">بودجه: {{ job.budget }} دلار</p>
+
+    <div class="proposal-form-card">
+        <h3>به این شغل علاقه‌مند هستید؟</h3>
+        {% if user.role == 'COMPANY' %}
+            <p>شما به عنوان شرکت وارد شده‌اید. شرکت‌ها نمی‌توانند پیشنهاد ارسال کنند.</p>
+        {% elif user.is_authenticated %}
+            <a href="{% url 'web-submit-proposal' job.pk %}" class="btn">ارسال پیشنهاد برای این پروژه</a>
+        {% else %}
+            <p>برای ارسال پیشنهاد باید <a href="{% url 'login' %}">وارد شوید</a> یا <a href="{% url 'web-register' %}">ثبت‌نام کنید</a>.</p>
+        {% endif %}
     </div>
-</body>
-</html>
+</div>
+{% endblock %}
