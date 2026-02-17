@@ -5,7 +5,7 @@ from django.contrib import messages
 from rest_framework import viewsets, generics, permissions, status
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
-from .models import Job, Proposal
+from .models import Job, Proposal, Message
 from .serializers import UserSerializer, JobSerializer, ProposalSerializer
 from .permissions import IsCompany, IsFreelancerOrExpert, IsOwnerOrReadOnly
 
@@ -133,6 +133,16 @@ def submit_proposal(request, pk):
 
     return render(request, 'roshd/submit_proposal.html', {'job': job})
 
+@login_required
+def view_proposals(request, pk):
+    job = get_object_or_404(Job, pk=pk)
+    if job.company != request.user:
+        messages.error(request, 'شما اجازه مشاهده پیشنهادات این آگهی را ندارید.')
+        return redirect('web-dashboard')
+
+    proposals = job.proposals.all().order_by('-created_at')
+    return render(request, 'roshd/view_proposals.html', {'job': job, 'proposals': proposals})
+
 def profile_view(request, username):
     profile_user = get_object_or_404(User, username=username)
     context = {'profile_user': profile_user}
@@ -145,3 +155,32 @@ def profile_view(request, username):
         context['profile'] = getattr(profile_user, 'company_profile', None)
 
     return render(request, 'roshd/profile.html', context)
+from django.db.models import Q
+
+@login_required
+def chat_list(request):
+    # Get all users the current user has messaged or received messages from
+    sent_to = Message.objects.filter(sender=request.user).values_list('receiver', flat=True)
+    received_from = Message.objects.filter(receiver=request.user).values_list('sender', flat=True)
+    user_ids = set(list(sent_to) + list(received_from))
+    users = User.objects.filter(id__in=user_ids)
+    return render(request, 'roshd/chat_list.html', {'chat_users': users})
+
+@login_required
+def chat_detail(request, username):
+    other_user = get_object_or_404(User, username=username)
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        if content:
+            Message.objects.create(sender=request.user, receiver=other_user, content=content)
+            return redirect('web-chat', username=username)
+
+    messages_list = Message.objects.filter(
+        (Q(sender=request.user) & Q(receiver=other_user)) |
+        (Q(sender=other_user) & Q(receiver=request.user))
+    ).order_by('created_at')
+
+    return render(request, 'roshd/chat_detail.html', {
+        'other_user': other_user,
+        'chat_messages': messages_list
+    })

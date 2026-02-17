@@ -34,8 +34,12 @@
         <div class="nav-links">
             <a href="{% url 'web-home' %}">جستجوی کار</a>
             {% if user.is_authenticated %}
+                <a href="{% url 'web-chat-list' %}">پیام‌ها</a>
                 <a href="{% url 'web-dashboard' %}">داشبورد</a>
-                <a href="{% url 'logout' %}">خروج ({{ user.username }})</a>
+                <form action="{% url 'logout' %}" method="post" style="display: inline; margin-left: 15px;">
+                    {% csrf_token %}
+                    <button type="submit" style="background: none; border: none; color: white; cursor: pointer; font-family: inherit; font-size: inherit; padding: 0;">خروج ({{ user.username }})</button>
+                </form>
             {% else %}
                 <a href="{% url 'login' %}">ورود</a>
                 <a href="{% url 'web-register' %}">ثبت‌نام</a>

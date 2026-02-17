@@ -1,7 +1,12 @@
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from rest_framework.routers import DefaultRouter
-from .views import UserRegistrationView, JobViewSet, ProposalViewSet, home, job_detail, register_view, dashboard, post_job, submit_proposal, profile_view
+from .views import (
+    UserRegistrationView, JobViewSet, ProposalViewSet,
+    home, job_detail, register_view, dashboard,
+    post_job, submit_proposal, view_proposals,
+    profile_view, chat_list, chat_detail
+)
 
 router = DefaultRouter()
 router.register(r'jobs', JobViewSet)
@@ -21,5 +26,8 @@ urlpatterns = [
     path('dashboard/', dashboard, name='web-dashboard'),
     path('job/new/', post_job, name='web-post-job'),
     path('job/<int:pk>/apply/', submit_proposal, name='web-submit-proposal'),
+    path('job/<int:pk>/proposals/', view_proposals, name='web-view-proposals'),
     path('profile/<str:username>/', profile_view, name='web-profile'),
+    path('messages/', chat_list, name='web-chat-list'),
+    path('messages/<str:username>/', chat_detail, name='web-chat'),
 ]

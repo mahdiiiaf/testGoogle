@@ -22,8 +22,9 @@
                 <div style="border: 1px solid #eee; padding: 10px; margin-bottom: 10px; border-radius: 4px;">
                     <h4>{{ job.title }}</h4>
                     <p>بودجه: {{ job.budget }} دلار</p>
-                    <p>تعداد پیشنهادات: {{ job.proposals.count }}</p>
-                    <a href="{% url 'web-job-detail' job.pk %}">مشاهده</a>
+                    <p>تعداد پیشنهادات: <strong>{{ job.proposals.count }}</strong></p>
+                    <a href="{% url 'web-job-detail' job.pk %}">مشاهده آگهی</a> |
+                    <a href="{% url 'web-view-proposals' job.pk %}" style="color: #28a745; font-weight: bold;">مشاهده پیشنهادات</a>
                 </div>
             {% empty %}
                 <p>هنوز آگهی ثبت نکرده‌اید.</p>

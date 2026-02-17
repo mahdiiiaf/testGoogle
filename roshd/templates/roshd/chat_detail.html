@@ -1,0 +1,42 @@
+{% extends "roshd/base.html" %}
+
+{% block title %}گفتگو با {{ other_user.username }} | رشد{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 800px; margin: auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px;">
+        <a href="{% url 'web-chat-list' %}">&larr; بازگشت به پیام‌ها</a>
+        <h2>گفتگو با {{ other_user.username }}</h2>
+    </div>
+
+    <div id="chat-box" style="height: 400px; overflow-y: scroll; border: 1px solid #eee; padding: 20px; border-radius: 8px; background: #fafafa; display: flex; flex-direction: column; gap: 10px;">
+        {% for message in chat_messages %}
+            <div style="max-width: 70%; padding: 10px 15px; border-radius: 15px; font-size: 0.95rem;
+                {% if message.sender == user %}
+                    align-self: flex-start; background: #28a745; color: white; border-bottom-right-radius: 2px;
+                {% else %}
+                    align-self: flex-end; background: #e9ecef; color: #333; border-bottom-left-radius: 2px;
+                {% endif %}">
+                {{ message.content }}
+                <div style="font-size: 0.7rem; margin-top: 5px; opacity: 0.8; text-align: left;">
+                    {{ message.created_at|date:"H:i" }}
+                </div>
+            </div>
+        {% empty %}
+            <p style="text-align: center; color: #999;">هنوز پیامی ارسال نشده است. گفتگو را شروع کنید!</p>
+        {% endfor %}
+    </div>
+
+    <form method="post" style="margin-top: 20px; display: flex; gap: 10px;">
+        {% csrf_token %}
+        <input type="text" name="content" placeholder="پیام خود را بنویسید..." required style="flex-grow: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+        <button type="submit" class="btn">ارسال</button>
+    </form>
+</div>
+
+<script>
+    // Scroll to bottom of chat box
+    var chatBox = document.getElementById("chat-box");
+    chatBox.scrollTop = chatBox.scrollHeight;
+</script>
+{% endblock %}

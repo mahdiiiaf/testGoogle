@@ -1,0 +1,27 @@
+{% extends "roshd/base.html" %}
+
+{% block title %}پیام‌ها | رشد{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>گفتگوهای من</h2>
+    <hr>
+    <div style="margin-top: 1rem;">
+        {% for chat_user in chat_users %}
+            <div style="border-bottom: 1px solid #eee; padding: 15px 0; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <strong>{{ chat_user.username }}</strong>
+                    <p style="color: #777; margin: 0; font-size: 0.9rem;">
+                        {% if chat_user.role == 'COMPANY' %}شرکت
+                        {% elif chat_user.role == 'EXPERT' %}متخصص
+                        {% else %}فریلنسر{% endif %}
+                    </p>
+                </div>
+                <a href="{% url 'web-chat' chat_user.username %}" class="btn">مشاهده گفتگو</a>
+            </div>
+        {% empty %}
+            <p>هنوز پیامی ندارید.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

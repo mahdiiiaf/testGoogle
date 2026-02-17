@@ -1,0 +1,36 @@
+{% extends "roshd/base.html" %}
+
+{% block title %}مشاهده پیشنهادات | رشد{% endblock %}
+
+{% block content %}
+<div class="card">
+    <a href="{% url 'web-dashboard' %}" style="display: block; margin-bottom: 20px;">&larr; بازگشت به داشبورد</a>
+    <h2>پیشنهادات برای: {{ job.title }}</h2>
+    <p>بودجه آگهی: {{ job.budget }} دلار</p>
+    <hr>
+
+    <div style="margin-top: 1rem;">
+        {% for proposal in proposals %}
+            <div style="border: 1px solid #eee; padding: 20px; margin-bottom: 20px; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <h4>ارسال شده توسط: <a href="{% url 'web-profile' proposal.applicant.username %}">{{ proposal.applicant.username }}</a></h4>
+                        <p style="color: #777; font-size: 0.9rem;">تاریخ ارسال: {{ proposal.created_at|date:"Y-m-d H:i" }}</p>
+                    </div>
+                    <div style="text-align: left;">
+                        <p style="color: #27ae60; font-weight: bold; font-size: 1.1rem;">مبلغ پیشنهادی: {{ proposal.bid_amount }} دلار</p>
+                    </div>
+                </div>
+                <div style="margin-top: 15px; background: #f9f9f9; padding: 15px; border-radius: 4px;">
+                    <p>{{ proposal.cover_letter|linebreaks }}</p>
+                </div>
+                <div style="margin-top: 15px;">
+                    <a href="{% url 'web-chat' proposal.applicant.username %}" class="btn" style="background: #007bff;">ارسال پیام به {{ proposal.applicant.username }}</a>
+                </div>
+            </div>
+        {% empty %}
+            <p>هنوز هیچ پیشنهادی برای این آگهی ثبت نشده است.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
