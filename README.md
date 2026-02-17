@@ -29,6 +29,8 @@ pip install django djangorestframework django-cors-headers
 python run_app.py
 ```
 
+**نکته:** اگر با خطای `table already exists` مواجه شدید، فایل `db.sqlite3` را حذف کرده و مجدداً اسکریپت را اجرا کنید.
+
 این اسکریپت کارهای زیر را انجام می‌دهد:
 1. ساخت فایل‌های مهاجرت پایگاه داده (Migrations).
 2. اجرای مهاجرت‌ها و ساخت دیتابیس `db.sqlite3`.

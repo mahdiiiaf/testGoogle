@@ -5,9 +5,12 @@ import subprocess
 def run_command(command):
     print(f"Running: {command}")
     try:
+        # Using shell=True for compatibility with various environments
         subprocess.check_call(command, shell=True)
     except subprocess.CalledProcessError as e:
-        print(f"Error running command: {e}")
+        print(f"\n[!] Error running command: {e}")
+        if "migrate" in command:
+            print("\n[TIP] If you're seeing 'table already exists' errors, try deleting the 'db.sqlite3' file and run this script again.")
         sys.exit(1)
 
 def main():
@@ -15,18 +18,24 @@ def main():
     if not os.environ.get("DJANGO_SECRET_KEY"):
         os.environ["DJANGO_SECRET_KEY"] = "django-insecure-bootstrap-key-for-local-run"
 
-    print("--- Starting Roshd Bootstrap ---")
+    print("========================================")
+    print("      Starting Roshd (رشد) Bootstrap    ")
+    print("========================================\n")
 
-    # 1. Install dependencies (optional, but good to ensure)
-    # run_command("pip install django djangorestframework django-cors-headers")
-
-    # 2. Run migrations
+    # 1. Run migrations
+    print("[1/2] Setting up database...")
+    # We ensure migrations are current but normally the provided 0001_initial is enough
     run_command("python manage.py makemigrations roshd")
     run_command("python manage.py migrate")
 
-    # 3. Start the server
-    print("--- Starting Server at http://127.0.0.1:8000/ ---")
-    run_command("python manage.py runserver")
+    # 2. Start the server
+    print("\n[2/2] Starting development server...")
+    print("      >>> http://127.0.0.1:8000/ <<<\n")
+
+    try:
+        run_command("python manage.py runserver")
+    except KeyboardInterrupt:
+        print("\nStopping server...")
 
 if __name__ == "__main__":
     main()
