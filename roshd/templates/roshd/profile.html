@@ -1,0 +1,36 @@
+{% extends "roshd/base.html" %}
+
+{% block title %}پروفایل {{ profile_user.username }} | رشد{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; align-items: center; gap: 20px;">
+        <div style="width: 100px; height: 100px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+            {{ profile_user.username|first|upper }}
+        </div>
+        <div>
+            <h1>{{ profile_user.username }}</h1>
+            <p style="color: #777;">
+                {% if profile_user.role == 'COMPANY' %}شرکت
+                {% elif profile_user.role == 'EXPERT' %}متخصص
+                {% else %}فریلنسر{% endif %}
+            </p>
+        </div>
+    </div>
+    <hr>
+
+    {% if profile %}
+        {% if profile_user.role == 'COMPANY' %}
+            <h3>{{ profile.company_name }}</h3>
+            <p><strong>وب‌سایت:</strong> {{ profile.website|default:"ثبت نشده" }}</p>
+            <p><strong>توضیحات:</strong> {{ profile.description }}</p>
+        {% else %}
+            <p><strong>مهارت‌ها:</strong> {{ profile.skills }}</p>
+            <p><strong>نرخ ساعتی:</strong> {{ profile.hourly_rate }} دلار</p>
+            <p><strong>درباره من:</strong> {{ profile.bio }}</p>
+        {% endif %}
+    {% else %}
+        <p>پروفایل این کاربر هنوز تکمیل نشده است.</p>
+    {% endif %}
+</div>
+{% endblock %}

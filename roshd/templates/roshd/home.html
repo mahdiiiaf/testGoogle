@@ -1,37 +1,25 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <title>رشد</title>
-    <style>
-        body { font-family: Tahoma, Arial, sans-serif; margin: 40px; line-height: 1.6; background-color: #f4f7f6; }
-        .job-card { background: white; border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .job-card h2 { margin-top: 0; color: #2c3e50; }
-        .budget { color: #27ae60; font-weight: bold; }
-        header { border-bottom: 2px solid #eee; padding-bottom: 20px; margin-bottom: 30px; }
-        .btn { background: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 10px; }
-        .btn:hover { background: #218838; }
-    </style>
-</head>
-<body>
-    <header>
-        <h1>رشد</h1>
-        <p>اتصال متخصصان، شرکت‌ها و فریلنسرها</p>
-    </header>
+{% extends "roshd/base.html" %}
 
-    <main>
-        <h2>آخرین آگهی‌های شغلی</h2>
-        {% for job in jobs %}
-            <div class="job-card">
-                <h2>{{ job.title }}</h2>
-                <p>ارسال شده توسط: <strong>{{ job.company.company_profile.company_name|default:job.company.username }}</strong></p>
-                <p>{{ job.description|truncatewords:30 }}</p>
-                <p class="budget">بودجه: {{ job.budget }} دلار</p>
-                <a href="{% url 'web-job-detail' job.pk %}" class="btn">مشاهده جزئیات</a>
-            </div>
-        {% empty %}
-            <p>هنوز هیچ آگهی شغلی ثبت نشده است.</p>
-        {% endfor %}
-    </main>
-</body>
-</html>
+{% block title %}رشد | اتصال متخصصان و شرکت‌ها{% endblock %}
+
+{% block content %}
+<header>
+    <h1>رشد</h1>
+    <p>اتصال متخصصان، شرکت‌ها و فریلنسرها</p>
+</header>
+
+<main>
+    <h2>آخرین آگهی‌های شغلی</h2>
+    {% for job in jobs %}
+        <div class="card" style="margin-bottom: 20px;">
+            <h2>{{ job.title }}</h2>
+            <p>ارسال شده توسط: <strong>{{ job.company.company_profile.company_name|default:job.company.username }}</strong></p>
+            <p>{{ job.description|truncatewords:30 }}</p>
+            <p style="color: #27ae60; font-weight: bold;">بودجه: {{ job.budget }} دلار</p>
+            <a href="{% url 'web-job-detail' job.pk %}" class="btn">مشاهده جزئیات</a>
+        </div>
+    {% empty %}
+        <p>هنوز هیچ آگهی شغلی ثبت نشده است.</p>
+    {% endfor %}
+</main>
+{% endblock %}

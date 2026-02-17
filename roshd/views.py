@@ -1,4 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from rest_framework import viewsets, generics, permissions, status
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
@@ -51,5 +54,94 @@ def home(request):
     return render(request, 'roshd/home.html', {'jobs': jobs})
 
 def job_detail(request, pk):
-    job = Job.objects.get(pk=pk)
+    job = get_object_or_404(Job, pk=pk)
     return render(request, 'roshd/job_detail.html', {'job': job})
+
+def register_view(request):
+    if request.method == 'POST':
+        # Simple registration logic for demonstration
+        # In a real app, use Django Forms
+        data = request.POST
+        username = data.get('username')
+        password = data.get('password')
+        role = data.get('role')
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'نام کاربری قبلاً انتخاب شده است.')
+        else:
+            user = User.objects.create_user(username=username, password=password, role=role)
+            login(request, user)
+            messages.success(request, f'خوش آمدید، {username}!')
+            return redirect('web-dashboard')
+
+    return render(request, 'roshd/auth/register.html')
+
+@login_required
+def dashboard(request):
+    user = request.user
+    context = {'user': user}
+
+    if user.role == 'COMPANY':
+        context['jobs'] = Job.objects.filter(company=user).order_by('-created_at')
+    else:
+        context['proposals'] = Proposal.objects.filter(applicant=user).order_by('-created_at')
+
+    return render(request, 'roshd/dashboard.html', context)
+
+@login_required
+def post_job(request):
+    if request.user.role != 'COMPANY':
+        messages.error(request, 'فقط شرکت‌ها می‌توانند آگهی ثبت کنند.')
+        return redirect('web-dashboard')
+
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        budget = request.POST.get('budget')
+
+        Job.objects.create(
+            company=request.user,
+            title=title,
+            description=description,
+            budget=budget
+        )
+        messages.success(request, 'آگهی شما با موفقیت ثبت شد.')
+        return redirect('web-dashboard')
+
+    return render(request, 'roshd/post_job.html')
+
+@login_required
+def submit_proposal(request, pk):
+    if request.user.role not in ['FREELANCER', 'EXPERT']:
+        messages.error(request, 'فقط متخصصان و فریلنسرها می‌توانند پیشنهاد ارسال کنند.')
+        return redirect('web-job-detail', pk=pk)
+
+    job = get_object_or_404(Job, pk=pk)
+
+    if request.method == 'POST':
+        cover_letter = request.POST.get('cover_letter')
+        bid_amount = request.POST.get('bid_amount')
+
+        Proposal.objects.create(
+            job=job,
+            applicant=request.user,
+            cover_letter=cover_letter,
+            bid_amount=bid_amount
+        )
+        messages.success(request, 'پیشنهاد شما با موفقیت ارسال شد.')
+        return redirect('web-dashboard')
+
+    return render(request, 'roshd/submit_proposal.html', {'job': job})
+
+def profile_view(request, username):
+    profile_user = get_object_or_404(User, username=username)
+    context = {'profile_user': profile_user}
+
+    if profile_user.role == 'EXPERT':
+        context['profile'] = getattr(profile_user, 'expert_profile', None)
+    elif profile_user.role == 'FREELANCER':
+        context['profile'] = getattr(profile_user, 'freelancer_profile', None)
+    elif profile_user.role == 'COMPANY':
+        context['profile'] = getattr(profile_user, 'company_profile', None)
+
+    return render(request, 'roshd/profile.html', context)

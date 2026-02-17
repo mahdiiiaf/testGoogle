@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}رشد{% endblock %}</title>
+    <style>
+        :root {
+            --primary-color: #28a745;
+            --secondary-color: #2c3e50;
+            --light-bg: #f4f7f6;
+            --white: #ffffff;
+            --border: #ddd;
+        }
+        body { font-family: Tahoma, Arial, sans-serif; margin: 0; line-height: 1.6; background-color: var(--light-bg); }
+        nav { background: var(--secondary-color); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        nav a { color: white; text-decoration: none; margin-left: 15px; }
+        .container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+        .card { background: var(--white); border: 1px solid var(--border); padding: 2rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .btn { background: var(--primary-color); color: white; padding: 0.6rem 1.2rem; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block; }
+        .btn:hover { background: #218838; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px; box-sizing: border-box; }
+        .nav-links { display: flex; align-items: center; }
+        .nav-brand { font-size: 1.5rem; font-weight: bold; }
+        footer { text-align: center; padding: 2rem; color: #777; font-size: 0.9rem; }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <nav>
+        <div class="nav-brand"><a href="{% url 'web-home' %}">رشد</a></div>
+        <div class="nav-links">
+            <a href="{% url 'web-home' %}">جستجوی کار</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'web-dashboard' %}">داشبورد</a>
+                <a href="{% url 'logout' %}">خروج ({{ user.username }})</a>
+            {% else %}
+                <a href="{% url 'login' %}">ورود</a>
+                <a href="{% url 'web-register' %}">ثبت‌نام</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+                <div style="padding: 10px; margin-bottom: 20px; background: #d4edda; border: 1px solid #c3e6cb; color: #155724; border-radius: 4px;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer>
+        <p>&copy; ۲۰۲۴ پلتفرم رشد - تمامی حقوق محفوظ است.</p>
+    </footer>
+</body>
+</html>

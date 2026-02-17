@@ -1,0 +1,47 @@
+{% extends "roshd/base.html" %}
+
+{% block title %}داشبورد | رشد{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>خوش آمدید، {{ user.username }}!</h2>
+    <p>نقش شما:
+        <strong>
+            {% if user.role == 'COMPANY' %}شرکت
+            {% elif user.role == 'EXPERT' %}متخصص
+            {% else %}فریلنسر{% endif %}
+        </strong>
+    </p>
+    <hr>
+
+    {% if user.role == 'COMPANY' %}
+        <h3>آگهی‌های من</h3>
+        <a href="{% url 'web-post-job' %}" class="btn">ثبت آگهی جدید</a>
+        <div style="margin-top: 1rem;">
+            {% for job in jobs %}
+                <div style="border: 1px solid #eee; padding: 10px; margin-bottom: 10px; border-radius: 4px;">
+                    <h4>{{ job.title }}</h4>
+                    <p>بودجه: {{ job.budget }} دلار</p>
+                    <p>تعداد پیشنهادات: {{ job.proposals.count }}</p>
+                    <a href="{% url 'web-job-detail' job.pk %}">مشاهده</a>
+                </div>
+            {% empty %}
+                <p>هنوز آگهی ثبت نکرده‌اید.</p>
+            {% endfor %}
+        </div>
+    {% else %}
+        <h3>پیشنهادهای ارسال شده</h3>
+        <div style="margin-top: 1rem;">
+            {% for proposal in proposals %}
+                <div style="border: 1px solid #eee; padding: 10px; margin-bottom: 10px; border-radius: 4px;">
+                    <h4>پروژه: {{ proposal.job.title }}</h4>
+                    <p>مبلغ پیشنهادی شما: {{ proposal.bid_amount }} دلار</p>
+                    <p>تاریخ ارسال: {{ proposal.created_at|date:"Y-m-d" }}</p>
+                </div>
+            {% empty %}
+                <p>هنوز پیشنهادی ارسال نکرده‌اید.</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -22,8 +22,13 @@
 
         <div class="proposal-form">
             <h3>به این شغل علاقه‌مند هستید؟</h3>
-            <p>متخصصان و فریلنسرها می‌توانند از طریق API پیشنهاد خود را ارسال کنند.</p>
-            <code>POST /api/proposals/</code>
+            {% if user.role == 'COMPANY' %}
+                <p>شما به عنوان شرکت وارد شده‌اید. شرکت‌ها نمی‌توانند پیشنهاد ارسال کنند.</p>
+            {% elif user.is_authenticated %}
+                <a href="{% url 'web-submit-proposal' job.pk %}" class="btn">ارسال پیشنهاد برای این پروژه</a>
+            {% else %}
+                <p>برای ارسال پیشنهاد باید <a href="{% url 'login' %}">وارد شوید</a> یا <a href="{% url 'web-register' %}">ثبت‌نام کنید</a>.</p>
+            {% endif %}
         </div>
     </div>
 </body>

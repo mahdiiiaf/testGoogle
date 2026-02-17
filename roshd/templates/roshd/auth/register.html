@@ -1,0 +1,32 @@
+{% extends "roshd/base.html" %}
+
+{% block title %}ثبت‌نام در رشد{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 400px; margin: auto;">
+    <h2 style="text-align: center;">ثبت‌نام</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>نام کاربری</label>
+            <input type="text" name="username" required>
+        </div>
+        <div class="form-group">
+            <label>رمز عبور</label>
+            <input type="password" name="password" required>
+        </div>
+        <div class="form-group">
+            <label>نوع حساب کاربری</label>
+            <select name="role" required>
+                <option value="FREELANCER">فریلنسر</option>
+                <option value="EXPERT">متخصص</option>
+                <option value="COMPANY">شرکت</option>
+            </select>
+        </div>
+        <button type="submit" class="btn" style="width: 100%;">ثبت‌نام</button>
+    </form>
+    <p style="text-align: center; margin-top: 1rem;">
+        قبلاً ثبت‌نام کرده‌اید؟ <a href="{% url 'login' %}">ورود</a>
+    </p>
+</div>
+{% endblock %}

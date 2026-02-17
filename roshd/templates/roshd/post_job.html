@@ -1,0 +1,26 @@
+{% extends "roshd/base.html" %}
+
+{% block title %}ثبت آگهی جدید | رشد{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 600px; margin: auto;">
+    <h2>ثبت آگهی شغلی جدید</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>عنوان شغل</label>
+            <input type="text" name="title" required>
+        </div>
+        <div class="form-group">
+            <label>توضیحات پروژه</label>
+            <textarea name="description" rows="6" required></textarea>
+        </div>
+        <div class="form-group">
+            <label>بودجه (دلار)</label>
+            <input type="number" name="budget" step="0.01" required>
+        </div>
+        <button type="submit" class="btn">انتشار آگهی</button>
+        <a href="{% url 'web-dashboard' %}" style="margin-right: 15px;">انصراف</a>
+    </form>
+</div>
+{% endblock %}
