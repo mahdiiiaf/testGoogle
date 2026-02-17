@@ -29,6 +29,11 @@ pip install django djangorestframework django-cors-headers
 python run_app.py
 ```
 
+**تغییر پورت:** اگر می‌خواهید برنامه روی پورت دیگری (مثلاً ۹۰۰۰) اجرا شود، شماره پورت را به دستور اضافه کنید:
+```bash
+python run_app.py 9000
+```
+
 **نکته:** اگر با خطای `table already exists` مواجه شدید، فایل `db.sqlite3` را حذف کرده و مجدداً اسکریپت را اجرا کنید.
 
 این اسکریپت کارهای زیر را انجام می‌دهد:

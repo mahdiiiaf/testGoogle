@@ -18,22 +18,26 @@ def main():
     if not os.environ.get("DJANGO_SECRET_KEY"):
         os.environ["DJANGO_SECRET_KEY"] = "django-insecure-bootstrap-key-for-local-run"
 
+    # Get port from command line arguments if provided, else default to 8000
+    port = "8000"
+    if len(sys.argv) > 1:
+        port = sys.argv[1]
+
     print("========================================")
     print("      Starting Roshd (رشد) Bootstrap    ")
     print("========================================\n")
 
     # 1. Run migrations
     print("[1/2] Setting up database...")
-    # We ensure migrations are current but normally the provided 0001_initial is enough
     run_command("python manage.py makemigrations roshd")
     run_command("python manage.py migrate")
 
     # 2. Start the server
     print("\n[2/2] Starting development server...")
-    print("      >>> http://127.0.0.1:8000/ <<<\n")
+    print(f"      >>> http://127.0.0.1:{port}/ <<<\n")
 
     try:
-        run_command("python manage.py runserver")
+        run_command(f"python manage.py runserver {port}")
     except KeyboardInterrupt:
         print("\nStopping server...")
 
